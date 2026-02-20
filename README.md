@@ -28,6 +28,8 @@ To invoke the script every 15 minutes, add the following line:
 
 To invoke the script at boot time (after the network is available) using systemd:
 
+Create the following file `/etc/systemd/system/weather-status-bar.service`:
+
 ```ini
 [Unit]
 Description=Create weather status bar line, suitable for i3status.
@@ -44,6 +46,12 @@ WorkingDirectory=/tmp
 [Install]
 WantedBy=multi-user.target
 
+```
+
+Enable service:
+
+```
+sudo systemctl enable weather-status-bar.service
 ```
 
 # Configuration of i3status bar
