@@ -2,7 +2,7 @@ Weather information for i3status bar using the Open Meteo weather service.
 
 # Script
 
-The script queries periodically (triggered by a cron job) the Open Meteo service for the current temperature and weather code.
+The script queries periodically (triggered by a cron job) and at boot time (triggered by systemd) the Open Meteo service for the current temperature and weather code.
 
 The weather code is translated to a descriptive text.
 
@@ -20,11 +20,30 @@ Add cron job:
 $ crontab -e
 ```
 
-To invoke the script every 15 minutes and once at reboot, add the following line:
+To invoke the script every 15 minutes, add the following line:
 
 ```
-@reboot /home/username/local/bin/weather-bar.sh > /dev/null 2>&1
 0,15,30,45 * * * * /home/username/local/bin/weather-bar.sh > /dev/null 2>&1
+```
+
+To invoke the script at boot time (after the network is available) using systemd:
+
+```ini
+[Unit]
+Description=Create weather status bar line, suitable for i3status.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/username/local/bin/weather-bar.sh
+User=username
+Group=usergroup
+WorkingDirectory=/tmp                
+
+[Install]
+WantedBy=multi-user.target
+
 ```
 
 # Configuration of i3status bar
